@@ -25,7 +25,7 @@ for (let each of document.querySelectorAll('.form-check-input')){
 document.querySelector('textarea').addEventListener('input', text_delay)
 
 function load_settings(){
-    let defaults = {buttons: true, auto_send: true, auto_delete: false, ctrl_save: false, disable_history: false, visual_editor: true, home_is_prompts: true, message: "The following is a transcript of a conversation between me and ChatGPT. Use it for context in the rest of the conversation. Be ready to edit and build upon the responses previously given by ChatGPT. Respond \"ready!\" if you understand the context. Do not respond with anything else. Conversation:\n"}
+    let defaults = {buttons: true, auto_send: true, auto_delete: false, ctrl_save: false, disable_history: false, visual_editor: true, home_is_prompts: true, message: "The following is a transcript of a conversation between me and Bing. Use it for context in the rest of the conversation. Be ready to edit and build upon the responses previously given by Bing. Respond \"ready!\" if you understand the context. Do not respond with anything else. Conversation:\n"}
     chrome.storage.local.get({settings: defaults}, function(result) {
         console.log(result)
         document.querySelector('#exportButtonsToggle').checked = result.settings.buttons

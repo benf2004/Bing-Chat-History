@@ -53,7 +53,9 @@ function saveConvo() {
             if (i % 2 === 0) { // modulus
                 convo.push(message.innerText)
             } else {
-                convo.push(message.innerHTML)
+                console.log(message)
+                let data = message.firstChild?.innerHTML ?? message.innerHTML
+                convo.push(data)
             }
             i = i + 1
         }

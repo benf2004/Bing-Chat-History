@@ -3,18 +3,19 @@ chrome.storage.local.get({'threads': null}, function (result) {
         load_threads(result.threads)
     }
     else{
-        main.innerHTML = `<h1 class="p-3 m-3 even dark">Welcome! This is where your thread history will appear. To get started, simply start a new ChatGPT conversation.</h1>`
+        main.innerHTML = `<h1 class="p-3 m-3 even dark">Welcome! This is where your thread history will appear. To get started, simply start a new Bing conversation.</h1>`
     }
 })
 
 let main = document.querySelector(".main")
 function sliceString(str, num) { //created by ChatGPT
+    console.log(str)
     // Check if the string is longer than num characters
     if (str.length > num) {
-        return `${str.slice(0, num)}...`.replace(`<p>`, "").replace(`</p>`, "");
+        return `${str.slice(0, num)}...`.replaceAll(`<p>`, "").replaceAll(`</p>`, "").replaceAll("\n", "");
     }
     // If the string is not longer than num characters, return it as is
-    return str;
+    return `${str}`.replaceAll("\n", "");
 }
 
 function delete_thread(i, row){
@@ -66,7 +67,7 @@ function export_thread(i){
         let t = result.threads
         let thread = t[i];
 
-        let title = "chatgpt_thread.txt";
+        let title = "Bing_thread.txt";
         let file = convert_thread_to_JSON_file(thread);
         download_blob_as_file(file, title);
     });
@@ -122,7 +123,7 @@ function convert_thread_to_text_file(thread)
 function convert_thread_to_markdown_file(thread)
 {
     let string = "";
-    string += "# " + "ChatGPT Conversation" + "\n";
+    string += "# " + "Bing Conversation" + "\n";
     string += "Date:" + thread.date + " " + thread.time + "\n";
     string += "\n"; // two newlines because MD is like that
     let convo = thread.convo;
@@ -220,7 +221,34 @@ async function dark_light() {
     )
 }
 
+function getVisibleText(html) {
+    console.log(html)
+    let text = "";
+    let charCount = 0;
+    let tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+
+    tmp.childNodes.forEach(function(node) {
+        if (charCount >= 100) {
+            return;
+        }
+        if (node.nodeType === Node.TEXT_NODE) {
+            text += node.textContent;
+            charCount += node.textContent.length;
+        } else if (node.nodeType === Node.ELEMENT_NODE && node.style.display !== "none" && node.style.visibility !== "hidden") {
+            text += getVisibleText(node.innerHTML);
+            charCount += text.length;
+        }
+    });
+
+    return text.trim().substring(0, MAX_SUBTITLE_LENGTH);
+}
+
+
+
 const MAX_TITLE_DISPLAY_LENGTH = 55;
+const MAX_SUBTITLE_LENGTH = 100
+
 
 function load_threads(threads, search=false, search_term="", bookmarks=false) {
     let threadsLoaded = []
@@ -244,7 +272,7 @@ function load_threads(threads, search=false, search_term="", bookmarks=false) {
         temp.querySelector('.title-text').innerHTML = thread_title;
 
         if (!search && threads[i].convo[1] !== undefined) {
-            temp.querySelector('.subtitle').innerHTML = sliceString(threads[i].convo[1], 100)
+            temp.querySelector('.subtitle').innerHTML = getVisibleText(threads[i].convo[1], 100)
         }
         else{
             temp.querySelector('.subtitle').innerHTML = sliceString(searchList(threads[i].convo, search_term), 100)
@@ -294,23 +322,6 @@ function load_threads(threads, search=false, search_term="", bookmarks=false) {
             else if (target.classList.contains('export')) {
                 export_thread(i, row);
             }
-            else if(target.classList.contains('continue')) {
-                let c = [];
-                console.log(threads[i])
-                console.log(threads[i].hasOwnProperty('unified_id'))
-                if (threads[i].hasOwnProperty('unified_id') && threads[i].unified_id === true) {
-                    console.log("unified")
-                    window.open(`https://chat.openai.com/chat/${threads[i].id}`, '_blank');
-                }
-                else {
-                    for (let i = 0; i < threads[i].convo.length; i++) {
-                        let user = i % 2 === 0 ? "Me" : "ChatGPT";
-                        c.push({[user]: htmlToPlainText(threads[0].convo[i])});
-                    }
-
-                    chrome.runtime.sendMessage({convo: c, type: 'b_continue_convo'})
-                }
-            }
             else{
                 window.open(link, "_blank")
             }
@@ -355,7 +366,7 @@ function export_all()
         let string = JSON.stringify(data);
         let blob = encode_string_as_blob(string);
         let currentTimeString = (new Date()).toJSON();
-        let filename = "ChatGPT-History" + "_" + currentTimeString + ".txt";
+        let filename = "Bing-History" + "_" + currentTimeString + ".txt";
         download_blob_as_file(blob, filename);
     });
 }
@@ -472,32 +483,6 @@ function import_prompts_from_data(data) {
         chrome.storage.local.set({prompts: prompts});
     });
 }
-
-chrome.storage.local.get({threads:"none"}, function(result) {
-  if (result.threads === "none"){ // new user
-      chrome.storage.local.set({seen_v2_toast: true})
-      chrome.storage.local.get({settings: {home_is_prompts: true}}, function (response){
-          let settings = response.settings;
-          settings.home_is_prompts = true;
-          chrome.storage.local.set({settings: settings})})
-  }
-  else {
-      chrome.storage.local.get({seen_v2_toast: false}, function (response){
-          let seen_v2_toast = response.seen_v2_toast;
-          if (!seen_v2_toast) {
-              chrome.storage.local.set({seen_v2_toast: true})
-              let toastEl = document.getElementById('liveToast')
-              let toast = new bootstrap.Toast(toastEl)
-              toast.show()
-              chrome.storage.local.get({settings: {home_is_prompts: true}}, function (response){
-                  let settings = response.settings;
-                  settings.home_is_prompts = true;
-                  chrome.storage.local.set({settings: settings})
-              })
-          }
-      })
-  }
-})
 
 document.querySelectorAll('.bnav').forEach(item => {item.addEventListener('click', bookmarks)})
 
