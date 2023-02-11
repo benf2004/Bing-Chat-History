@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Bing Chat History + Prompt Genius",
+  "description": "Auto-save your Bing Chat history. Discover, share, import, and use the best prompts for AI chatbots.",
+  "version": "2.1.7",
+  "permissions": ["storage", "unlimitedStorage", "contextMenus"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.bing.com/search*"],
+      "js": ["content-scripts/utility.js","content-scripts/bing/scraper.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://chat.openai.com/chat*"],
+      "js": ["content-scripts/utility.js", "content-scripts/scraper.js", "content-scripts/prompt-inject.js", "content-scripts/export.js","content-scripts/export-inject.js", "content-scripts/themes.js"
+	    ,"external-js/html2canvas.js", "external-js/jspdf.umd.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.reddit.com/r/ChatGPTPromptGenius/submit*"],
+      "js": ["content-scripts/reddit/submit.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.reddit.com/r/ChatGPTPromptGenius/*"],
+      "js": ["content-scripts/reddit/savePrompt.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources" : [{
+    "resources": ["content-scripts/prompts.js","content-scripts/export-buttons.js","content-scripts/utility.js"
+      ,"themes/*", "external-js/jspdf.umd.js", "external-js/html2canvas.js"],
+    "matches": ["https://chat.openai.com/*"],
+    "use_dynamic_url": true
+  }, {"resources": ["content-scripts/utility.js" ,"themes/*"],
+    "matches": ["https://www.bing.com/*"]}],
+  "action": {
+    "default-title": "Bing Chat History + ChatGPT Prompt Genius"
+  },
+  "icons":{
+    "16": "icons/16x16.png",
+    "48": "icons/48x48.png",
+    "128": "icons/128x128.png"
+  }
+}
