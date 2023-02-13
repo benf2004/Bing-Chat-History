@@ -24,16 +24,18 @@ function nonMessage(element) {
 }
 
 
-function getShadowElements(shadowRoot) { // it kinda returns a soupy unorganized mess, but it's all there and queryable
+function getShadowElements(shadowRoot) {
     const fragment = new DocumentFragment();
     Array.from(shadowRoot.children).forEach(child => {
-        fragment.appendChild(child.cloneNode(true));
+        const clone = child.cloneNode(true);
         if (child.shadowRoot) {
-            fragment.appendChild(getShadowElements(child.shadowRoot));
+            clone.appendChild(getShadowElements(child.shadowRoot));
         }
+        fragment.appendChild(clone);
     });
     return fragment;
 }
+
 
 let id;
 function saveConvo() {
@@ -41,25 +43,25 @@ function saveConvo() {
         return;
     }
     let convo = []
-    const chatDIV = document.querySelector("cib-serp").shadowRoot.querySelector("#cib-conversation-main").shadowRoot.querySelector("#cib-chat-main")
+    let chatDIV = document.querySelector("cib-serp").shadowRoot.querySelector("#cib-conversation-main").shadowRoot.querySelector("#cib-chat-main")
     let c = getShadowElements(chatDIV)
-    let messages = c.querySelectorAll(".content")
+    let messages = c.querySelectorAll("cib-message-group")
     if (!startsWithUser(c)){
-        messages[0].remove() // removes "Thanks for clearing my head!" message (not working)
+        messages[0].remove()
     }
-    let i = 0
     for (let message of messages){
-        if (!nonMessage(message)) {
-            if (i % 2 === 0) { // modulus
-                convo.push(message.innerText)
-            } else {
-                console.log(message)
-                let data = message.firstChild?.innerHTML ?? message.innerHTML
-                convo.push(data)
-            }
-            i = i + 1
+        let source = message.getAttribute("source")
+        if (source === "user"){
+            let text = message.querySelector('.content').innerText
+            convo.push({"text": text, "bot": false})
         }
-    }
+        else if (source === "bot") {
+            let text = message.querySelector(`.cib-message-main[type="text"]`)?.querySelector(`.ac-textBlock`)
+            if (text !== null) {
+                convo.push({"text": text.innerHTML, "bot": true})
+            }
+        }
+}
     if (firstTime){
         id = generateUUID()
         const newChatButton = document.querySelector("cib-serp").shadowRoot.querySelector("cib-action-bar").shadowRoot.querySelector(".button-compose")
@@ -87,4 +89,4 @@ function saveConvo() {
     }
 }
 
-setInterval(saveConvo, 2000)
+setInterval(saveConvo, 3000)

@@ -142,8 +142,12 @@ let timer;
 function searchThreads(threads, searchTerm) { // created by ChatGPT
     searchTerm = searchTerm.toLowerCase();
     return threads.filter(thread => {
+        let strings = []
+        for (let each of thread.convo){
+            strings.push(each.text)
+        }
         return (
-            thread.convo.some(message => message.toLowerCase().includes(searchTerm)) ||
+            strings.some(message => message.toLowerCase().includes(searchTerm)) ||
             (thread.title && thread.title.toLowerCase().includes(searchTerm))
         );
     });
@@ -166,7 +170,6 @@ function search() {
 document.querySelector('.search-bar').addEventListener('input', search)
 
 let threads_g = []
-let updated = false
 function update_threads() {
     chrome.storage.local.get(['threads'], function (result) {
         threads_g = result.threads
@@ -185,7 +188,11 @@ function update_bookmark(btn, saved){
     }
 }
 
-function searchList(strings, searchTerm) { // created by ChatGPT
+function searchList(convo, searchTerm) { // created by ChatGPT
+    let strings = []
+    for (let message of convo){
+        strings.push(message.text)
+    }
     searchTerm = searchTerm.toLowerCase();
     const matchingStrings = strings.filter(string => string.toLowerCase().includes(searchTerm));
 
@@ -265,16 +272,16 @@ function load_threads(threads, search=false, search_term="", bookmarks=false) {
         temp.querySelector('.date').innerHTML = threads[i].date;
         temp.querySelector('.time').innerHTML = threads[i].time;
 
-        let thread_title = threads[i].title;
-        if(!thread_title) thread_title = sliceString(threads[i].convo[0], MAX_TITLE_DISPLAY_LENGTH);
+        let thread_title = threads[i]?.title;
+        if(!thread_title) thread_title = sliceString(threads[i].convo[0].text, MAX_TITLE_DISPLAY_LENGTH);
         if(thread_title.length > MAX_TITLE_DISPLAY_LENGTH) thread_title = sliceString(thread_title, MAX_TITLE_DISPLAY_LENGTH);
 
         temp.querySelector('.title-text').innerHTML = thread_title;
 
         if (!search && threads[i].convo[1] !== undefined) {
-            temp.querySelector('.subtitle').innerHTML = getVisibleText(threads[i].convo[1], 100)
+            temp.querySelector('.subtitle').innerHTML = getVisibleText(threads[i].convo[1].text, 100)
         }
-        else{
+        else {
             temp.querySelector('.subtitle').innerHTML = sliceString(searchList(threads[i].convo, search_term), 100)
             temp.querySelector('.title-text').innerHTML = sliceString(searchList([thread_title], search_term), 100)
             if (temp.querySelector('.title-text').innerHTML === "") {
