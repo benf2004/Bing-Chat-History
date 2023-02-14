@@ -212,20 +212,19 @@ body.light{
 
 #cover {position: fixed; height: 100%; width: 190px; top:0; left: 0; background: #202123; z-index:9999;}
 
-a.tooltip-target:hover {
+a.tooltip-target[href]:hover {
     text-decoration-line: underline;
     cursor: pointer;
     border-radius: 2px;
 }
 
-.light a.tooltip-target:hover {
+.light a.tooltip-target[href]:hover {
     background: rgb(226, 233, 255);
     color: #0e2c89;
     text-decoration-color: #174ae4;
-
 }
 
-a.tooltip-target, span.tooltip-target {
+a.tooltip-target[href], span.tooltip-target {
     /* position: relative; */
     color: inherit;
     border-bottom: 2px solid transparent;
@@ -234,9 +233,13 @@ a.tooltip-target, span.tooltip-target {
     text-underline-offset: 3px;
 }
 
+a:hover {
+    color: inherit
+}
+
 a {
     position: relative;
-    color: rgb(64, 7, 162);
+    color: inherit;
     text-decoration: none;
 }
 
