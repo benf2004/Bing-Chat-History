@@ -144,27 +144,28 @@ pre {
     overflow: auto;
     font-size: .875em;
 }
-code, pre{
+code, pre {
     font-family: Söhne Mono,Monaco,Andale Mono,Ubuntu Mono,monospace!important;
 }
 
-pre > code{
+pre > code {
     display: block;
     overflow-x: auto;
     padding: 1.25rem!important;
-}
-code{
-    font-size: .875em;
     background-color: black;
+}
+
+code {
+    font-size: .875em;
     font-weight: 600;
 }
-.dark code{
+.dark code {
     color: #F9F9FA
 }
-pre code{
+pre code {
     color: #F9F9FA!important;
 }
-.light code{
+.light code {
     color: #111827
 }
 pre > code::before, pre> code::after{
