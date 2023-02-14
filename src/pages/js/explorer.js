@@ -9,7 +9,6 @@ chrome.storage.local.get({'threads': null}, function (result) {
 
 let main = document.querySelector(".main")
 function sliceString(str, num) { //created by ChatGPT
-    console.log(str)
     // Check if the string is longer than num characters
     if (str.length > num) {
         return `${str.slice(0, num)}...`.replaceAll(`<p>`, "").replaceAll(`</p>`, "").replaceAll("\n", "");
@@ -229,7 +228,6 @@ async function dark_light() {
 }
 
 function getVisibleText(html) {
-    console.log(html)
     let text = "";
     let charCount = 0;
     let tmp = document.createElement("DIV");
