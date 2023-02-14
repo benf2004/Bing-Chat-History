@@ -14,12 +14,8 @@
       "run_at": "document_idle"
     }
   ],
-  "web_accessible_resources" : [{
-    "resources": ["content-scripts/prompts.js","content-scripts/export-buttons.js","content-scripts/utility.js"
-      ,"themes/*", "external-js/jspdf.umd.js", "external-js/html2canvas.js"],
-    "matches": ["https://chat.openai.com/*"],
-    "use_dynamic_url": true
-  }, {"resources": ["content-scripts/utility.js"],
+  "web_accessible_resources" : [
+    {"resources": ["content-scripts/utility.js"],
     "matches": ["https://www.bing.com/*"]}],
   "action": {
     "default-title": "Bing Chat History"
