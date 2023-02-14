@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bing Chat History + Prompt Genius",
+  "name": "Bing Chat History",
   "description": "Auto-save your Bing chat history in your browser",
-  "version": "0.9.0",
+  "version": "0.9.5",
   "permissions": ["storage", "unlimitedStorage"],
   "background": {
     "service_worker": "background.js"
@@ -19,10 +19,10 @@
       ,"themes/*", "external-js/jspdf.umd.js", "external-js/html2canvas.js"],
     "matches": ["https://chat.openai.com/*"],
     "use_dynamic_url": true
-  }, {"resources": ["content-scripts/utility.js" ,"themes/*"],
+  }, {"resources": ["content-scripts/utility.js"],
     "matches": ["https://www.bing.com/*"]}],
   "action": {
-    "default-title": "Bing Chat History + ChatGPT Prompt Genius"
+    "default-title": "Bing Chat History"
   },
   "icons":{
     "16": "icons/16x16.png",

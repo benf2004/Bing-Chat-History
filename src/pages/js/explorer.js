@@ -194,7 +194,7 @@ function searchList(convo, searchTerm) { // created by ChatGPT
         strings.push(message.text)
     }
     searchTerm = searchTerm.toLowerCase();
-    const matchingStrings = strings.filter(string => string.toLowerCase().includes(searchTerm));
+    const matchingStrings = strings.filter(string => string?.toLowerCase()?.includes(searchTerm)) ?? [];
 
     return matchingStrings.map(string => {
         const index = string.toLowerCase().indexOf(searchTerm);

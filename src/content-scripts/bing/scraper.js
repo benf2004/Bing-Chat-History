@@ -11,20 +11,7 @@ function startsWithUser(c){
     return c.querySelector(".cib-message-main").getAttribute("source") === "user"
 }
 
-function nonMessage(element) {
-    if (!element) return false;
-
-    for (let i = 0; i < element.children.length; i++) {
-        if (element.children[i].classList.contains("meta-text")) return true;
-        if (element.classList.contains("attributions")) return true;
-        if (element.classList.contains("ignore")) return true;
-    }
-
-    return false;
-}
-
-
-function getShadowElements(shadowRoot) {
+function getShadowElements(shadowRoot) { // created by ChatGPT (not Bing)
     const fragment = new DocumentFragment();
     Array.from(shadowRoot.children).forEach(child => {
         const clone = child.cloneNode(true);
@@ -49,11 +36,20 @@ function saveConvo() {
     if (!startsWithUser(c)){
         messages[0].remove()
     }
+    let firstUser = true;
+    let title;
     for (let message of messages){
         let source = message.getAttribute("source")
         if (source === "user"){
-            let text = message.querySelector('.content').innerText
-            convo.push({"text": text, "bot": false})
+            let userMessages = message.querySelectorAll('.content') // could only be 2+ user messages in a row, so no need to do this for bots
+            for (let each of userMessages){
+                let text = each.innerText
+                convo.push({"text": text, "bot": false})
+                if (firstUser) {
+                    title = text
+                    firstUser = false;
+                }
+            }
         }
         else if (source === "bot") {
             let text = message.querySelector(`.cib-message-main[type="text"]`)?.querySelector(`.ac-textBlock`)
@@ -67,7 +63,7 @@ function saveConvo() {
         const newChatButton = document.querySelector("cib-serp").shadowRoot.querySelector("cib-action-bar").shadowRoot.querySelector(".button-compose")
         newChatButton.addEventListener("click", () => firstTime = true)
     }
-    let thread = {convo: convo, title: document.title, date: getDate(), time: getTime(), id:id ?? generateUUID(), favorite: false, unified_id: false}
+    let thread = {convo: convo, title: title ?? document.title, date: getDate(), time: getTime(), id:id ?? generateUUID(), favorite: false, unified_id: false}
     if (firstTime){
         chrome.storage.local.get({threads: []}, function (result) {
             let t = result.threads

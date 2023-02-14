@@ -3,6 +3,11 @@
     height: 48px;
 }
 
+.clickable
+{
+    cursor: pointer;
+}
+
 .blue-info-box{
 	color: #12256f; /* Use a dark blue instead of black because colour perception is relative */
 	background-color: #D8FCFF;
@@ -23,6 +28,8 @@
     font-size: .75rem;
     line-height: 1rem;
     color: #D1D5DA;
+    border-top-right-radius: .375rem;
+    border-top-left-radius: .375rem;
 }
 .icon svg{
     background-color: #0BA37F;
@@ -125,19 +132,30 @@
 .light .human {
     background-color: #ffffff;
 }
-
 .text svg{
     display:none
 }
-pre{
+pre {
     white-space: pre-wrap;
     border-radius: 0.375rem;
+    display: block;
+    margin-top: 0;
+    margin-bottom: .5rem;
+    overflow: auto;
+    font-size: .875em;
 }
 code, pre{
     font-family: Söhne Mono,Monaco,Andale Mono,Ubuntu Mono,monospace!important;
 }
+
+pre > code{
+    display: block;
+    overflow-x: auto;
+    padding: 1.25rem!important;
+}
 code{
     font-size: .875em;
+    background-color: black;
     font-weight: 600;
 }
 .dark code{
@@ -149,7 +167,7 @@ pre code{
 .light code{
     color: #111827
 }
-div > code::before, div> code::after{
+pre > code::before, pre> code::after{
     content: "" !important;
 }
 code::before, code::after{
@@ -186,9 +204,66 @@ body.light{
 	color: grey;
 }
 
+.content a {
+    position: relative;
+    text-decoration: none;
+}
+
 #cover {position: fixed; height: 100%; width: 190px; top:0; left: 0; background: #202123; z-index:9999;}
 
-img{
+a.tooltip-target:hover {
+    text-decoration-line: underline;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.light a.tooltip-target:hover {
+    background: rgb(226, 233, 255);
+    color: #0e2c89;
+    text-decoration-color: #174ae4;
+
+}
+
+a.tooltip-target, span.tooltip-target {
+    /* position: relative; */
+    color: inherit;
+    border-bottom: 2px solid transparent;
+    text-decoration-style: dotted;
+    text-decoration-color: rgb(153, 153, 153);
+    text-underline-offset: 3px;
+}
+
+a {
+    position: relative;
+    color: rgb(64, 7, 162);
+    text-decoration: none;
+}
+
+sup:hover{
+    text-decoration: underline;
+}
+
+sup {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    vertical-align: top;
+    top: -1px;
+    margin: 0px 2px;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #123bb6;
+    background: #d1dbfa;
+    outline: transparent solid 1px;
+}
+
+
+img {
     max-width: 100%;
     height: auto;
 }
