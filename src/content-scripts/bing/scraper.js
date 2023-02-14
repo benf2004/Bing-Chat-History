@@ -85,4 +85,5 @@ function saveConvo() {
     }
 }
 
-setInterval(saveConvo, 3000)
+const SAVE_INTERVAL = 3000 // ms
+setInterval(saveConvo, SAVE_INTERVAL)
