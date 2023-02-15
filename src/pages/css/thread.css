@@ -41,8 +41,7 @@
 .text{
     margin-bottom: 1.25em;
     line-height: 1.75;
-    white-space: pre-line;
-	
+
 	/* force it to use up all the space, even in flex */
 	width:100%; 
 }
