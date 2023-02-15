@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Bing Chat History",
   "description": "Auto-save your Bing chat history in your browser",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "permissions": ["storage", "unlimitedStorage"],
   "background": {
     "service_worker": "background.js"
