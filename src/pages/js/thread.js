@@ -1,3 +1,5 @@
+import {conversationData, getCurrentChatText, convertChatToMarkdown, downloadBlobAsFile} from "./export.js";
+
 hljs.highlightAll();
 // Get the URL of the current page
 const url = new URL(window.location.href);
@@ -9,11 +11,11 @@ const h_template = document.querySelector("#human")
 const b_template = document.querySelector("#bot")
 
 let main = document.querySelector("#main");
-let convo; let thread;
+let thread; let convo;
 chrome.storage.local.get(['threads'], function (result) {
     let t = result.threads
 	thread = getObjectById(thread_id, t)
-	convo = thread.convo;
+    convo = thread.convo;
 	load_thread(convo);
 });
 
@@ -58,6 +60,32 @@ function copy_setup() { // created by ChatGPT
             await navigator.clipboard.writeText(text);
         });
     });
-
 }
 
+
+// SHARE LINK BUTTON
+async function shareGPTLink() {
+    let cd = conversationData(convo);
+    const res = await fetch("https://sharegpt.com/api/conversations", {
+        body: JSON.stringify(cd),
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+    });
+    const {id} = await res.json();
+    const url = `https://shareg.pt/${id}`; // short link to the ShareGPT post
+    window.open(url, "_blank");
+}
+
+document.getElementById("link").addEventListener("click", shareGPTLink)
+
+// EXPORT MD BUTTON
+function exportMD(){
+    let fileName = `${document.title}.md`;
+    let data = getCurrentChatText(convo);
+    let blob = convertChatToMarkdown(data, document.title);
+    downloadBlobAsFile(blob, fileName);
+}
+
+document.getElementById("markdown").addEventListener("click", exportMD)
