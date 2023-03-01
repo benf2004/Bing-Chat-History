@@ -8,7 +8,9 @@ function chatIsActive(){
 }
 
 function startsWithUser(c){
-    return c.querySelector(".cib-message-main").getAttribute("source") === "user"
+    console.log(c.querySelector(".cib-message-main").getAttribute("source"))
+    console.log(c.querySelector(".cib-message-main").getAttribute("source") == "user")
+    return c.querySelector(".cib-message-main").getAttribute("source") == "user"
 }
 
 function getShadowElements(shadowRoot) { // created by ChatGPT (not Bing)
@@ -23,8 +25,8 @@ function getShadowElements(shadowRoot) { // created by ChatGPT (not Bing)
     return fragment;
 }
 
-
 let id;
+let chatLength = 0;
 function saveConvo() {
     if (!chatIsActive()){
         return;
@@ -33,10 +35,18 @@ function saveConvo() {
     let chatDIV = document.querySelector("cib-serp").shadowRoot.querySelector("#cib-conversation-main").shadowRoot.querySelector("#cib-chat-main")
     let c = getShadowElements(chatDIV)
     let messages = c.querySelectorAll("cib-message-group")
-    if (!startsWithUser(c)){
+    if (!startsWithUser(c)){ /// remove the silly "Ok, reset chat" messages
         messages[0].remove()
+        chatLength = chatLength - 1
     }
-    let firstUser = true;
+    console.log(chatLength)
+
+    if (messages.length < chatLength){ // rather than listen for new chat button to be pressed, listen for the conversation length to decrease
+        firstTime = true
+    }
+    chatLength = messages.length
+
+    let firstUser = true; // bool to save know to save the title
     let title;
     for (let message of messages){
         let source = message.getAttribute("source")
@@ -57,11 +67,9 @@ function saveConvo() {
                 convo.push({"text": text.innerHTML, "bot": true})
             }
         }
-}
+    }
     if (firstTime){
         id = generateUUID()
-        const newChatButton = document.querySelector("cib-serp").shadowRoot.querySelector("cib-action-bar").shadowRoot.querySelector(".button-compose")
-        newChatButton.addEventListener("click", () => firstTime = true)
     }
     let thread = {convo: convo, title: title ?? document.title, date: getDate(), time: getTime(), id:id ?? generateUUID(), favorite: false, unified_id: false}
     if (firstTime){
