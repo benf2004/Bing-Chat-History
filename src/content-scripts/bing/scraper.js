@@ -7,12 +7,8 @@ function chatIsActive() {
   return chatStatus === "conversation";
 }
 
-function startsWithUser(c) {
-  console.log(c.querySelector(".cib-message-main").getAttribute("source"));
-  console.log(
-    c.querySelector(".cib-message-main").getAttribute("source") == "user"
-  );
-  return c.querySelector(".cib-message-main").getAttribute("source") == "user";
+function startsWithUser(messages) {
+  return messages[0].getAttribute("source") == "user";
 }
 
 function getShadowElements(shadowRoot) {
@@ -40,13 +36,12 @@ function saveConvo() {
     .shadowRoot.querySelector("#cib-conversation-main")
     .shadowRoot.querySelector("#cib-chat-main");
   let c = getShadowElements(chatDIV);
-  let messages = c.querySelectorAll("cib-message-group");
-  if (!startsWithUser(c)) {
+  let messages = Array.from(c.querySelectorAll("cib-message-group"));
+  if (messages.length > 0 && !startsWithUser(messages)) {
     /// remove the silly "Ok, reset chat" messages
-    messages[0].remove();
+    messages.shift();
     chatLength = chatLength - 1;
   }
-  console.log(chatLength);
 
   if (messages.length < chatLength) {
     // rather than listen for new chat button to be pressed, listen for the conversation length to decrease
@@ -69,11 +64,12 @@ function saveConvo() {
         }
       }
     } else if (source === "bot") {
-      let text = message
-        .querySelector(`.cib-message-main[type="text"]`)
-        ?.querySelector(`.ac-textBlock`);
-      if (text !== null) {
-        convo.push({ text: text.innerHTML, bot: true });
+      let botMessages = message.querySelectorAll(".content"); // could only be 2+ user messages in a row, so no need to do this for bots
+      for (let each of botMessages) {
+        let text = each?.querySelector(`.ac-textBlock`);
+        if (text != null) {
+          convo.push({ text: text.innerHTML, bot: true });
+        }
       }
     }
   }
