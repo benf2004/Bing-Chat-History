@@ -82,9 +82,28 @@ document.getElementById("link").addEventListener("click", shareGPTLink)
 
 // EXPORT MD BUTTON
 function exportMD(){
-    let fileName = `${document.title}.md`;
+    // The title should be date of the chat, "Bing Conversation" plus the title of the thread in a stubbified format. We have thread.date, thread.time and thread.title available to us.
+    // Lets load thread time and date into a Date object. Thread date is stored as "DD Mon YYYY" and Time doesn't have a leading zero and stored in 12 hour format
+    let date = thread.date.split(" ");
+    let time = thread.time.split(" "); //this extracts the am/pm
+    let hour = time[0].split(":")[0];
+    let minute = time[0].split(":")[1];
+    let ampm = time[1];
+    let year = date[2];
+    let month = date[1];
+    let day = date[0];
+    //use Date.parse to construct the date object
+    let d = Date.parse(`${month} ${day}, ${year} ${hour}:${minute} ${ampm}`);
+    // make it an isoFormat
+    let isoDateTime = new Date(d).toISOString();
+
+    let threadTitle = `${isoDateTime}_Bing-Conversation_${thread.title}`;
+    // for fileName, make a stub using regular expresisons to allow only valid characters through. And remove any trailing _ before appending .md
+    let fileName = threadTitle.replace(/[^a-z0-9]/gi, '_').replace(/_$/g, "") + ".md";
+    
     let data = getCurrentChatText(convo);
-    let blob = convertChatToMarkdown(data, document.title);
+
+    let blob = convertChatToMarkdown(data, "Bing Conversation");
     downloadBlobAsFile(blob, fileName);
 }
 
