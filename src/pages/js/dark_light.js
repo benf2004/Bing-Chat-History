@@ -4,7 +4,7 @@ function switchClass(element) {
         element.classList.remove("dark");
         element.classList.add("light");
         document.querySelector("#d_l").innerHTML = "Dark"
-        icon.classList.remove('fa-sun-bright')
+        icon.classList.remove('fa-sun')
         icon.classList.add('fa-moon')
         chrome.storage.local.set({mode: "light"})
     }
@@ -13,7 +13,7 @@ function switchClass(element) {
         element.classList.add("dark");
         document.querySelector("#d_l").innerHTML = "Light"
         icon.classList.remove('fa-moon')
-        icon.classList.add('fa-sun-bright')
+        icon.classList.add('fa-sun')
         chrome.storage.local.set({mode: "dark"})
     }
 
