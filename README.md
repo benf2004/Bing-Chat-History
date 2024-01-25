@@ -1,4 +1,4 @@
-**THIS EXTNESION IS NO LONGER BEING MAINTAINED. FEEL FREE TO MAKE A PULL REQUEST WITH ANY UPDATES**
+**THIS EXTENSION IS NO LONGER BEING MAINTAINED. FEEL FREE TO MAKE A PULL REQUEST WITH ANY FIXES**
 
 <a href="https://chrome.google.com/webstore/detail/bing-chat-history/hjhpahdglfjddhhecnjlhckicdpcdhpg"><img src="https://user-images.githubusercontent.com/12115686/222017500-01039a12-de48-43ba-af50-f01d67047268.png" style="height: 48px !important"></a>
 <a href="https://www.buymeacoffee.com/bennyfi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 48px !important;width: 173px !important;" ></a> <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png" style="height: 48px !important"></a>
